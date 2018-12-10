@@ -1,0 +1,10 @@
+.app {
+  width: 100%;
+  max-width: 500px;
+  margin: 100px auto;
+  font-family: Roboto, Arial, sans-serif;
+}
+
+.app__title {
+  text-align: center;
+}

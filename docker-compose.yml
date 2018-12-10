@@ -1,0 +1,20 @@
+version: '3.2'
+services:
+  psql:
+    image: postgres:11
+    environment:
+      - POSTGRES_DB=notes
+
+  node:
+    container_name: react-todo-node
+    build:
+      context: ./
+      dockerfile: Dockerfile-node
+    tty: true
+    volumes:
+      - ./server/server.ts:/app/server.ts:Z
+      - ./server/package.json:/app/package.json:Z
+      - ./server/yarn.lock:/app/yarn.lock:Z
+      - ./server/tsconfig.json:/app/tsconfig.json:Z
+    ports:
+      - 8080:8080
