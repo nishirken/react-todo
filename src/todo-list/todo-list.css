@@ -1,0 +1,8 @@
+.todo-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-list__add-button {
+  align-self: flex-end;
+}
