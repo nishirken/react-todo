@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { defaultTodo, ITodo } from 'src/app.types';
-import { TodoItem } from 'src/todo-item/todo-item';
+import { defaultTodo, ITodo } from '../common';
+import { TodoItem } from '../todo-item/todo-item';
 import './todo-list.css';
 
-interface IState {
+export interface IState {
   items: ITodo[];
 }
 
@@ -16,9 +16,10 @@ export class TodoList extends React.PureComponent<{}, IState> {
     return (
       <div className="todo-list">
         <button className="todo-list__add-button" onClick={this.addItem}>Add +</button>
-        {this.state.items.map(({ name, id }, i) => (
+        {this.state.items.map(({ name, }, i) => (
           <TodoItem
-            deleteItem={this.deleteItem.bind(this, id)}
+            deleteItem={this.deleteItem.bind(this, i)}
+            editItem={this.editItem.bind(this, i)}
             key={i}
             name={name}
             index={i}
@@ -26,6 +27,15 @@ export class TodoList extends React.PureComponent<{}, IState> {
         ))}
       </div>
     );
+  }
+
+  private editItem = (index: number, newName: string): void => {
+    this.setState(({ items }) => {
+      const newItem = { name: newName, id: items[index].id };
+      return {
+        items: [...items.slice(0, index), newItem, ...items.slice(index + 1)],
+      };
+    });
   }
 
   private addItem = (): void => {
