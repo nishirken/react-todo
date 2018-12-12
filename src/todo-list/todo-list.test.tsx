@@ -5,18 +5,18 @@ import { defaultTodo } from '../common';
 import { IProps as ChildProps, TodoItem } from '../todo-item/todo-item';
 import { IState, TodoList } from './todo-list';
 import { testTodos } from './todo-list.fixtures';
- 
+
 Enzyme.configure({ adapter: new Adapter() });
 
 describe('Todo list component', () => {
   let component: Enzyme.ShallowWrapper<{}, IState, TodoList>;
 
   beforeEach(() => {
-    component = Enzyme.shallow<TodoList, {}, IState>(<TodoList />);
-    component.setState({ items: testTodos, });
+    component = Enzyme.shallow<TodoList, {}, IState>(<TodoList api={jest.fn(() => Promise.resolve(testTodos))} />);
   });
 
   it('Выводит элементы списка дел', () => {
+    expect(component.instance().props.api).toHaveBeenCalled();
     expect(component.find(TodoItem)).toHaveLength(testTodos.length);
   });
 
@@ -33,10 +33,11 @@ describe('Todo list component', () => {
     component.find('.todo-list__add-button').simulate('click');
     expect(component.find(TodoItem)).toHaveLength(testTodos.length + 1);
     expect(component.find(TodoItem).last().props().name).toBe(defaultTodo.name);
+    expect(component.instance().props.api).toHaveBeenCalledWith('/notes', 'POST', { name: 'todo', done: false });
   });
 
   it('Обновляет имя в списке по editItem', () => {
-    const newName = 'wash dishes'; 
+    const newName = 'wash dishes';
     const firstProps = () => component.find<ChildProps>(TodoItem).first().props();
     firstProps().editItem(newName);
     expect(firstProps().name).toBe(newName);

@@ -2,6 +2,7 @@ import * as Koa from 'koa';
 import * as bodyparser from 'koa-bodyparser';
 import * as json from 'koa-json';
 import * as Router from 'koa-router';
+import * as cors from 'koa2-cors';
 import { Pool } from 'pg';
 
 const successResponse = {
@@ -79,7 +80,8 @@ const successResponse = {
   app
     .use(bodyparser())
     .use(json())
-    .use(router.routes());
+    .use(router.routes())
+    .use(cors());
 
   app.listen(port);
 })();
