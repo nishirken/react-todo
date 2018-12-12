@@ -15,16 +15,21 @@ export class TodoList extends React.PureComponent<{}, IState> {
   public render() {
     return (
       <div className="todo-list">
-        <button className="todo-list__add-button" onClick={this.addItem}>Add +</button>
-        {this.state.items.map(({ name, }, i) => (
-          <TodoItem
-            deleteItem={this.deleteItem.bind(this, i)}
-            editItem={this.editItem.bind(this, i)}
-            key={i}
-            name={name}
-            index={i}
-          />
-        ))}
+        <header className="todo-list__header">
+          <div className="todo-list__number">№</div>
+          <button className="todo-list__add-button button" onClick={this.addItem}>Add</button>
+        </header>
+        <div className="todo-list__todos">
+          {this.state.items.map(({ name, }, i) => (
+            <TodoItem
+              deleteItem={this.deleteItem.bind(this, i)}
+              editItem={this.editItem.bind(this, i)}
+              key={i}
+              name={name}
+              index={i}
+            />
+          ))}
+        </div>
       </div>
     );
   }

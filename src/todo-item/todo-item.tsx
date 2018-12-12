@@ -25,23 +25,25 @@ export class TodoItem extends React.PureComponent<IProps, IState> {
     return (
       <div className="todo-item">
         <div className="todo-item__index">{index}</div>
-        {!this.state.isEditable ? (
-          <React.Fragment>
-            <div className="todo-item__name">{name}</div>
-            <button className="todo-item__edit-button" onClick={this.startEdit}>edit</button>
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            <input
-              className="todo-item__name-input"
-              type="text"
-              onChange={this.onInputChange}
-              value={this.state.newName}
-            />
-            <button className="todo-item__save-button" onClick={this.saveName}>save</button>
-          </React.Fragment>
-          )}
-        <button className="todo-item__delete-button" onClick={deleteItem}>delete</button>
+        <div className="todo-item__content">
+          {!this.state.isEditable ? (
+            <React.Fragment>
+              <div className="todo-item__name">{name}</div>
+              <button className="todo-item__edit-button button" onClick={this.startEdit}>edit</button>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <input
+                className="todo-item__name-input"
+                type="text"
+                onChange={this.onInputChange}
+                value={this.state.newName}
+              />
+              <button className="todo-item__save-button button" onClick={this.saveName}>save</button>
+            </React.Fragment>
+            )}
+          </div>
+        <button className="todo-item__delete-button button" onClick={deleteItem}>delete</button>
       </div>
     );
   }

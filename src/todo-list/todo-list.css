@@ -1,6 +1,18 @@
-.todo-list {
+.todo-list__todos {
   display: flex;
   flex-direction: column;
+}
+
+.todo-list__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+}
+
+.todo-list__number {
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .todo-list__add-button {
