@@ -1,16 +1,18 @@
-export const api = <T>(
-  endpoint: string,
+import Axios from 'axios';
+
+const instance = Axios.create({
+  baseURL: 'http://localhost:8080',
+});
+
+export const api = async <T, R extends object = {}>(
+  url: string,
   method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-  body?: any,
-): Promise<T> => fetch(
-  'http://localhost:8080' + endpoint,
-  {
-    body: JSON.stringify(body),
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
+  data?: R
+): Promise<T> => {
+  const res = await instance.request({
+    data,
     method,
-    mode: 'cors',
-  }
-).then(r => r.json());
+    url,
+  });
+  return res.data;
+};

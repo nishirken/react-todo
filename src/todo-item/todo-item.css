@@ -5,6 +5,10 @@
   border-bottom: 1px solid #b2aa9c;
 }
 
+.todo-item--done {
+  opacity: 0.5;
+}
+
 .todo-item:first-child {
   border-top: 1px solid #b2aa9c;
 }

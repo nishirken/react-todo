@@ -30,13 +30,15 @@ export class TodoList extends React.PureComponent<IProps, IState> {
           <button className="todo-list__add-button button" onClick={this.addItem}>Add</button>
         </header>
         <div className="todo-list__todos">
-          {this.state.items.map(({ name, }, i) => (
+          {this.state.items.map(({ name, done }, i) => (
             <TodoItem
               deleteItem={this.deleteItem.bind(this, i)}
-              editItem={this.editItem.bind(this, i)}
+              changeName={this.changeName.bind(this, i)}
+              changeDone={this.changeDone.bind(this, i)}
               key={i}
               name={name}
               index={i}
+              done={done}
             />
           ))}
         </div>
@@ -44,22 +46,33 @@ export class TodoList extends React.PureComponent<IProps, IState> {
     );
   }
 
-  private editItem = (index: number, newName: string): void => {
+  private setNew(x: ITodo, index: number): void {
+    this.setState(({ items }) => ({
+      items: [...items.slice(0, index), x, ...items.slice(index + 1)],
+    }));
+  }
+
+  private changeName = (index: number, newName: string): void => {
     const { items } = this.state;
     const newItem = { name: newName, id: items[index].id, done: items[index].done };
     this.props.api('/notes/' + items[index].id, 'PUT', { name: newName, done: items[index].done, });
-    this.setState({
-      items: [...items.slice(0, index), newItem, ...items.slice(index + 1)],
-    });
+    this.setNew(newItem, index);
   }
 
-  private addItem = (): void => {
-    this.setState(prevState => ({ items: [...prevState.items, defaultTodo] }));
-    this.props.api('/notes', 'POST', { name: 'todo', done: false, });
+  private changeDone = (index: number, done: boolean): void => {
+    const { items } = this.state;
+    const newItem = { done, id: items[index].id, name: items[index].name };
+    this.props.api('/notes/' + items[index].id, 'PUT', { name: items[index].name, done });
+    this.setNew(newItem, index);
+  }
+
+  private addItem = async (): Promise<void> => {
+    const res = await this.props.api<ITodo>('/notes', 'POST', { name: defaultTodo.name, done: false, });
+    this.setState(prevState => ({ items: [...prevState.items, res] }));
   }
 
   private deleteItem = (index: number): void => {
     this.setState(prevState => ({ items: prevState.items.filter((_, i) => i !== index) }));
-    this.props.api('/notes/' + this.state.items[index], 'DELETE');
+    this.props.api('/notes/' + this.state.items[index].id, 'DELETE');
   }
 }

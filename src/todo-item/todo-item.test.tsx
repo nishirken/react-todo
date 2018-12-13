@@ -14,7 +14,9 @@ describe('Todo item component', () => {
         name="call boss"
         index={0}
         deleteItem={jest.fn()}
-        editItem={jest.fn()}
+        changeName={jest.fn()}
+        changeDone={jest.fn()}
+        done={false}
       />
     );
   });
@@ -29,11 +31,22 @@ describe('Todo item component', () => {
     component.find('.todo-item__edit-button').simulate('click');
     component.find('.todo-item__name-input').simulate('change', { currentTarget: { value: newName } });
     component.find('.todo-item__save-button').simulate('click');
-    expect(component.instance().props.editItem).toHaveBeenCalledWith(newName);
+    expect(component.instance().props.changeName).toHaveBeenCalledWith(newName);
   });
 
   it('Вызывает delete по клику на кнопку', () => {
     component.find('.todo-item__delete-button').simulate('click');
     expect(component.instance().props.deleteItem).toHaveBeenCalled();
+  });
+
+  it('Меняет done, если было false', () => {
+    component.find('.todo-item__done-checkbox').simulate('change');
+    expect(component.instance().props.changeDone).toHaveBeenCalledWith(true);
+  });
+
+  it('Меняет done, если было true', () => {
+    component.setProps({ done: true });
+    component.find('.todo-item__done-checkbox').simulate('change');
+    expect(component.instance().props.changeDone).toHaveBeenCalledWith(false);
   });
 });

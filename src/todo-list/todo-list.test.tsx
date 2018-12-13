@@ -12,7 +12,9 @@ describe('Todo list component', () => {
   let component: Enzyme.ShallowWrapper<{}, IState, TodoList>;
 
   beforeEach(() => {
-    component = Enzyme.shallow<TodoList, {}, IState>(<TodoList api={jest.fn(() => Promise.resolve(testTodos))} />);
+    component = Enzyme.shallow<TodoList, {}, IState>(
+      <TodoList api={jest.fn(() => Promise.resolve(testTodos))} />
+    );
   });
 
   it('Выводит элементы списка дел', () => {
@@ -29,18 +31,29 @@ describe('Todo list component', () => {
     expect(component.findWhere(hasTestName).exists()).toBeFalsy();
   });
 
-  it('Дочерний компонент добавляет новый элемент в список', () => {
+  it('Дочерний компонент добавляет новый элемент в список',async () => {
+    const testItem = { name: 'todo', done: false };
+    const response = { ...testItem, id: 0, };
+    component.setProps({ api: jest.fn(() => Promise.resolve(response)) });
     component.find('.todo-list__add-button').simulate('click');
+    await expect(component.instance().props.api('', 'POST')).resolves.toEqual(response);
     expect(component.find(TodoItem)).toHaveLength(testTodos.length + 1);
     expect(component.find(TodoItem).last().props().name).toBe(defaultTodo.name);
-    expect(component.instance().props.api).toHaveBeenCalledWith('/notes', 'POST', { name: 'todo', done: false });
   });
 
-  it('Обновляет имя в списке по editItem', () => {
+  const firstProps = () => component.find<ChildProps>(TodoItem).first().props();
+
+  it('Обновляет имя в списке по changeName', () => {
     const newName = 'wash dishes';
-    const firstProps = () => component.find<ChildProps>(TodoItem).first().props();
-    firstProps().editItem(newName);
+
+    firstProps().changeName(newName);
     expect(firstProps().name).toBe(newName);
+    expect(component.find(TodoItem)).toHaveLength(testTodos.length);
+  });
+
+  it('Обновляет done в списке по changeDone', () => {
+    firstProps().changeDone(!testTodos[0].done);
+    expect(firstProps().done).toBeTruthy();
     expect(component.find(TodoItem)).toHaveLength(testTodos.length);
   });
 });

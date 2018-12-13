@@ -47,10 +47,10 @@ const successResponse = {
         ctx.throw(400, 'name param is empty');
       }
 
-      await pool.query(
-        `insert into notes (name, done) values ('${name}', '${done}')`
+      const { rows } = await pool.query(
+        `insert into notes (name, done) values ('${name}', '${done}') returning id`
       );
-      ctx.body = successResponse;
+      ctx.body = { name, done, id: rows[0].id };
     } catch (error) {
       ctx.throw(500);
     }
@@ -78,10 +78,10 @@ const successResponse = {
   });
 
   app
+    .use(cors())
     .use(bodyparser())
     .use(json())
-    .use(router.routes())
-    .use(cors());
+    .use(router.routes());
 
   app.listen(port);
 })();

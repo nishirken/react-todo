@@ -7,5 +7,5 @@ export interface ITodo {
 export const defaultTodo: ITodo = {
   done: false,
   id: null,
-  name: '',
+  name: 'todo',
 };

@@ -5,7 +5,9 @@ export interface IProps {
   name: string;
   index: number;
   deleteItem: () => void;
-  editItem: (newName: string) => void;
+  done: boolean;
+  changeName: (newName: string) => void;
+  changeDone: (done: boolean) => void;
 }
 
 export interface IState {
@@ -20,11 +22,17 @@ export class TodoItem extends React.PureComponent<IProps, IState> {
   };
 
   public render() {
-    const { name, index, deleteItem } = this.props;
+    const { name, index, deleteItem, done } = this.props;
 
     return (
-      <div className="todo-item">
+      <div className={`todo-item ${done ? 'todo-item--done' : ''}`}>
         <div className="todo-item__index">{index}</div>
+        <input
+          type="checkbox"
+          className="todo-item__done-checkbox"
+          checked={done}
+          onChange={this.changeDone}
+        />
         <div className="todo-item__content">
           {!this.state.isEditable ? (
             <React.Fragment>
@@ -57,7 +65,11 @@ export class TodoItem extends React.PureComponent<IProps, IState> {
   }
 
   private saveName = (): void => {
-    this.props.editItem(this.state.newName);
+    this.props.changeName(this.state.newName);
     this.setState({ isEditable: false, newName: '', });
+  }
+
+  private changeDone = (): void => {
+    this.props.changeDone(!this.props.done);
   }
 }
