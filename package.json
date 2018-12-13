@@ -23,7 +23,7 @@
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "server-start": "yarn ts-node server.ts"
+    "server-start": "yarn ts-node -P tsconfig.server.json server.ts"
   },
   "devDependencies": {
     "@types/jest": "^23.3.10",

@@ -11,10 +11,5 @@ services:
       context: ./
       dockerfile: Dockerfile-node
     tty: true
-    volumes:
-      - ./src/server.ts:/app/server.ts:Z
-      - ./package.json:/app/package.json:Z
-      - ./yarn.lock:/app/yarn.lock:Z
-      - ./tsconfig.server.json:/app/tsconfig.json:Z
     ports:
       - 8080:8080
